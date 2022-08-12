@@ -19,14 +19,14 @@ sql.query('SHOW TABLES', (err, results) => {
             else {
                 const db = client.db(process.env.MONGO_DB);
 
-                dumpTable = table => new Promise((resolve, reject) => sql.query(`SELECT * FROM ${table}`, (err, results) => {
+                dumpTable = table => new Promise((resolve, reject) => sql.query(`SELECT * FROM ${table}`, async (err, results) => {
                     if (err){
                         console.log(`An error occurred while connecting to ${table}`, err);
                         return reject();
                     } 
                     else {
                         try {
-                            console.log(results.length);
+                            for (let i = 0; i < results.length; i++) console.log(JSON.parse(results[i]))
                             return resolve();
                         } catch(err){
                             console.log(err);
