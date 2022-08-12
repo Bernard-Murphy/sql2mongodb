@@ -13,7 +13,11 @@ sql.connect();
 sql.query('SHOW TABLES', (err, results) => {
     if (err) console.log('error', err);
     else {
-        console.log(results);
+        const tables = [].slice.call(results);
+        for (let t = 0; t < tables.length; t++){
+            const table = tables[t];
+            console.log(table);
+        }
     }
 });
 
