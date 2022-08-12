@@ -26,7 +26,7 @@ sql.query('SHOW TABLES', (err, results) => {
                     } 
                     else {
                         try {
-                            for (let i = 0; i < results.length; i++) console.log(results[i]);
+                            for (let i = 0; i < results.length; i++) await db.collection(table).insertOne(results[i]);
                             return resolve();
                         } catch(err){
                             console.log(err);
