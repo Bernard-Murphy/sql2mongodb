@@ -15,7 +15,7 @@ sql.query('SHOW TABLES', (err, results) => {
     else {
         const tables = [].slice.call(results);
         for (let t = 0; t < tables.length; t++){
-            const table = tables[t];
+            const table = tables[t][`Tables_in_${process.env.MYSQL_DB}`];
             console.log(table);
         }
     }
