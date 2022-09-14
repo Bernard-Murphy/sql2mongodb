@@ -1,5 +1,18 @@
 const mysql = require('mysql');
 const mongo = require('mongodb').MongoClient;
+const crypto = require('crypto');
+
+const id = () => new Promise((resolve, reject) => {
+    /**
+     * Returns random hex string length 16 for mongo ID
+     */
+    crypto.randomBytes(16, (err, buffer) => {
+        if (err){
+            console.log(err);
+            reject();
+        } else resolve(buffer.toString('hex'));
+    });
+});
 
 const sql = mysql.createConnection({
     host: process.env.MYSQL_HOST,
@@ -26,7 +39,13 @@ sql.query('SHOW TABLES', (err, results) => {
                     } 
                     else {
                         try {
-                            for (let i = 0; i < results.length; i++) await db.collection(table).insertOne(results[i]);
+                            for (let i = 0; i < results.length; i++) {
+                                const id = await id();
+                                await db.collection(table).insertOne({
+                                    _id: id,
+                                    ...results[i]
+                                });
+                            }
                             return resolve();
                         } catch(err){
                             console.log(err);
