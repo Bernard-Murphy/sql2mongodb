@@ -2,17 +2,7 @@ const mysql = require('mysql');
 const mongo = require('mongodb').MongoClient;
 const crypto = require('crypto');
 
-const id = () => new Promise((resolve, reject) => {
-    /**
-     * Returns random hex string length 16 for mongo ID
-     */
-    crypto.randomBytes(16, (err, buffer) => {
-        if (err){
-            console.log(err);
-            reject();
-        } else resolve(buffer.toString('hex'));
-    });
-});
+
 
 const sql = mysql.createConnection({
     host: process.env.MYSQL_HOST,
@@ -26,11 +16,24 @@ sql.connect();
 sql.query('SHOW TABLES', (err, results) => {
     if (err) console.log('error', err);
     else {
+        
         const tables = [].slice.call(results);
         mongo.connect(process.env.MONGO_URL, { useUnifiedTopology: true }, async (err, client) => {
             if (err) console.log('MONGO CONNECT ERROR:\n', err);
             else {
                 const db = client.db(process.env.MONGO_DB);
+
+                id = () => new Promise((resolve, reject) => {
+                    /**
+                     * Returns random hex string length 16 for mongo ID
+                     */
+                    crypto.randomBytes(16, (err, buffer) => {
+                        if (err){
+                            console.log(err);
+                            reject();
+                        } else resolve(buffer.toString('hex'));
+                    });
+                });
 
                 dumpTable = table => new Promise((resolve, reject) => sql.query(`SELECT * FROM ${table}`, async (err, results) => {
                     if (err){
