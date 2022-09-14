@@ -43,9 +43,9 @@ sql.query('SHOW TABLES', (err, results) => {
                     else {
                         try {
                             for (let i = 0; i < results.length; i++) {
-                                const id = await id();
+                                const _id = await id();
                                 await db.collection(table).insertOne({
-                                    _id: id,
+                                    _id: _id,
                                     ...results[i]
                                 });
                             }
